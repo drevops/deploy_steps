@@ -1,4 +1,4 @@
 name: Deploy Steps
 type: module
 description: 'Runs repeatable, run-on-every-deploy logic as discoverable deploy step plugins.'
-core_version_requirement: ^10.3 || ^11
+core_version_requirement: ^10.3 || ^11 || ^12
