@@ -43,7 +43,7 @@ class DeployStepKernelTest extends KernelTestBase {
     $this->setSetting('environment', 'local');
 
     $reasons = [];
-    $logger = $this->createMock(LoggerInterface::class);
+    $logger = $this->createStub(LoggerInterface::class);
     $logger->method('notice')->willReturnCallback(function (string|\Stringable $message, array $context = []) use (&$reasons): void {
       if (isset($context['@reason'])) {
         $reasons[] = (string) $context['@reason'];

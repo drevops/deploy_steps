@@ -43,8 +43,8 @@ class ReindexSearchApiDeployStepTest extends DeployStepUnitTestBase {
    */
   #[DataProvider('dataProviderSkip')]
   public function testSkip(bool $enabled, ?string $expected): void {
-    $module_handler = $this->createMock(ModuleHandlerInterface::class);
-    $module_handler->method('moduleExists')->with('search_api')->willReturn($enabled);
+    $module_handler = $this->createStub(ModuleHandlerInterface::class);
+    $module_handler->method('moduleExists')->willReturnMap([['search_api', $enabled]]);
 
     $step = ReindexSearchApiDeployStep::create($this->container(['module_handler' => $module_handler]), [], 'reindex_search_api', []);
 

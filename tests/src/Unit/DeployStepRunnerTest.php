@@ -33,10 +33,10 @@ class DeployStepRunnerTest extends UnitTestCase {
     $skipped->method('label')->willReturn('skipped step');
     $skipped->expects($this->never())->method('run');
 
-    $manager = $this->createMock(DeployStepManager::class);
+    $manager = $this->createStub(DeployStepManager::class);
     $manager->method('getSortedSteps')->willReturn(['running' => $running, 'skipped' => $skipped]);
 
-    $runner = new DeployStepRunner($manager, $this->createMock(LoggerInterface::class));
+    $runner = new DeployStepRunner($manager, $this->createStub(LoggerInterface::class));
     $runner->run(DeployStepInterface::PHASE_POST);
   }
 
@@ -44,15 +44,15 @@ class DeployStepRunnerTest extends UnitTestCase {
    * Tests that a failing step aborts the run by propagating the exception.
    */
   public function testStepFailureAborts(): void {
-    $failing = $this->createMock(DeployStepInterface::class);
+    $failing = $this->createStub(DeployStepInterface::class);
     $failing->method('skip')->willReturn(NULL);
     $failing->method('label')->willReturn('failing step');
     $failing->method('run')->willThrowException(new \RuntimeException('Step failed.'));
 
-    $manager = $this->createMock(DeployStepManager::class);
+    $manager = $this->createStub(DeployStepManager::class);
     $manager->method('getSortedSteps')->willReturn(['failing' => $failing]);
 
-    $runner = new DeployStepRunner($manager, $this->createMock(LoggerInterface::class));
+    $runner = new DeployStepRunner($manager, $this->createStub(LoggerInterface::class));
 
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage('Step failed.');
@@ -74,13 +74,13 @@ class DeployStepRunnerTest extends UnitTestCase {
     $post->method('label')->willReturn('post step');
     $post->expects($this->once())->method('run');
 
-    $manager = $this->createMock(DeployStepManager::class);
+    $manager = $this->createStub(DeployStepManager::class);
     $manager->method('getSortedSteps')->willReturnMap([
       [DeployStepInterface::PHASE_PRE, ['pre' => $pre]],
       [DeployStepInterface::PHASE_POST, ['post' => $post]],
     ]);
 
-    $runner = new DeployStepRunner($manager, $this->createMock(LoggerInterface::class));
+    $runner = new DeployStepRunner($manager, $this->createStub(LoggerInterface::class));
     $runner->run();
   }
 
