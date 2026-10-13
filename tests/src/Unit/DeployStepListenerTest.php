@@ -16,6 +16,7 @@ use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Tests the DeployStepListener Console event listeners.
@@ -24,6 +25,20 @@ use Symfony\Component\Console\Output\NullOutput;
  */
 #[Group('DeployStep')]
 class DeployStepListenerTest extends UnitTestCase {
+
+  /**
+   * Tests that create() injects the runner service from the container.
+   */
+  public function testCreate(): void {
+    $runner = $this->createMock(DeployStepRunner::class);
+    $runner->expects($this->once())->method('run')->with(DeployStepInterface::PHASE_PRE);
+
+    $container = $this->createMock(ContainerInterface::class);
+    $container->expects($this->once())->method('get')->with(DeployStepRunner::class)->willReturn($runner);
+
+    $listener = DeployStepListener::create($container);
+    $listener->runPreDeploySteps(new ConsoleCommandEvent(new Command('deploy:hook'), new ArrayInput([]), new NullOutput()));
+  }
 
   /**
    * Tests that only a Console deploy:hook command runs the PRE phase.
