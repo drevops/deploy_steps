@@ -38,7 +38,7 @@ It owns the single pair of Drush `pre-command` / `post-command` hooks on `deploy
 
 - Drupal `^10.3 || ^11 || ^12`
 - PHP `8.3+`
-- [Drush](https://www.drush.org/) `^12.5 || ^13` - the module's entire integration is a pair of Drush command hooks
+- [Drush](https://www.drush.org/) `^12.5 || ^13 || ^14` - the module's entire integration is a pair of Drush command hooks
 
 ## Installation
 
