@@ -69,8 +69,8 @@ class ImportMigrationsDeployStepTest extends DeployStepUnitTestBase {
   public function testSkip(string $migration_skip, bool $module_enabled, ?string $expected): void {
     putenv('DRUPAL_MIGRATION_SKIP=' . $migration_skip);
 
-    $module_handler = $this->createMock(ModuleHandlerInterface::class);
-    $module_handler->method('moduleExists')->with('migrate_tools')->willReturn($module_enabled);
+    $module_handler = $this->createStub(ModuleHandlerInterface::class);
+    $module_handler->method('moduleExists')->willReturnMap([['migrate_tools', $module_enabled]]);
 
     $step = ImportMigrationsDeployStep::create($this->container(['module_handler' => $module_handler]), [], 'import_migrations', []);
 

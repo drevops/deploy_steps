@@ -27,7 +27,7 @@ class DeployStepCommandsTest extends UnitTestCase {
     $runner->expects($this->once())->method('run')->with(DeployStepInterface::PHASE_PRE);
 
     $commands = new DeployStepCommands($runner);
-    $commands->runPreDeploySteps($this->createMock(CommandData::class));
+    $commands->runPreDeploySteps($this->createStub(CommandData::class));
   }
 
   /**
@@ -38,7 +38,7 @@ class DeployStepCommandsTest extends UnitTestCase {
     $runner->expects($this->once())->method('run')->with(DeployStepInterface::PHASE_POST);
 
     $commands = new DeployStepCommands($runner);
-    $commands->runPostDeploySteps(NULL, $this->createMock(CommandData::class));
+    $commands->runPostDeploySteps(NULL, $this->createStub(CommandData::class));
   }
 
 }

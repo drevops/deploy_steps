@@ -20,20 +20,20 @@ abstract class DeployStepUnitTestBase extends UnitTestCase {
    * Builds a container returning the services DeployStepBase::create() needs.
    *
    * @param array $services
-   *   Service overrides keyed by service id; any not given is a bare mock.
+   *   Service overrides keyed by service id; any not given is a bare stub.
    *
    * @return \Symfony\Component\DependencyInjection\ContainerInterface
    *   The container.
    */
   protected function container(array $services = []): ContainerInterface {
     $services += [
-      'module_handler' => $this->createMock(ModuleHandlerInterface::class),
-      'state' => $this->createMock(StateInterface::class),
-      'entity_type.manager' => $this->createMock(EntityTypeManagerInterface::class),
-      'config.factory' => $this->createMock(ConfigFactoryInterface::class),
+      'module_handler' => $this->createStub(ModuleHandlerInterface::class),
+      'state' => $this->createStub(StateInterface::class),
+      'entity_type.manager' => $this->createStub(EntityTypeManagerInterface::class),
+      'config.factory' => $this->createStub(ConfigFactoryInterface::class),
     ];
 
-    $container = $this->createMock(ContainerInterface::class);
+    $container = $this->createStub(ContainerInterface::class);
     $container->method('get')->willReturnCallback(fn(string $id): object => $services[$id]);
 
     return $container;

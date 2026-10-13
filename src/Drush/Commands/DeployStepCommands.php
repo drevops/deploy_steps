@@ -24,6 +24,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * The README ("Why this module exists", "How it runs") covers the discovery
  * design and why the anchor is `deploy:hook` rather than `deploy`.
+ *
+ * These hooks reach `deploy:hook` only while it is an annotated command.
+ * Drush 14 implements it as a Symfony Console command, which
+ * \Drupal\deploy_steps\Drush\Listeners\DeployStepListener covers instead.
  */
 final class DeployStepCommands extends DrushCommands {
 
