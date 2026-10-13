@@ -32,7 +32,7 @@ Runs repeatable, run-on-every-deploy logic as discoverable **deploy step** plugi
 
 Drupal and Drush run-once hooks (`hook_update_N()`, `hook_post_update_NAME()`, `hook_deploy_NAME()`) are recorded as completed and never run again - they cannot express "run on every deploy". This module provides that missing layer: the repeatable counterpart to run-once `hook_deploy_NAME()`.
 
-It owns the single pair of Drush `pre-command` / `post-command` hooks on `deploy:hook`, and on every deploy it **discovers** every `DeployStep` plugin from every enabled module, groups them by phase, orders each phase by weight, checks each plugin's skip reason, and runs the rest. Any enabled module contributes steps just by declaring a plugin - no Drush wiring of its own - which is what makes the mechanism reusable.
+It owns the single pair of Drush hooks that run before and after `deploy:hook`, and on every deploy it **discovers** every `DeployStep` plugin from every enabled module, groups them by phase, orders each phase by weight, checks each plugin's skip reason, and runs the rest. Any enabled module contributes steps just by declaring a plugin - no Drush wiring of its own - which is what makes the mechanism reusable.
 
 ## Requirements
 
@@ -56,6 +56,8 @@ drush pm:install deploy_steps_example
 ## How it runs
 
 The module hooks `drush deploy:hook` - the command a deploy pipeline runs in every environment to apply pending database updates and configuration. Pre-phase steps run before the `deploy:hook` body, post-phase steps after it.
+
+On Drush 12 and 13 those are `pre-command` / `post-command` command hooks. Drush 14 rewrote `deploy:hook` as a Symfony Console command, which command hooks don't reach, so there the module listens for the command's Console events instead. Each phase still runs once per deploy. The one difference: on Drush 14, post-phase steps run only when `deploy:hook` succeeds.
 
 If a site's deploy pipeline does **not** call `drush deploy:hook`, the steps do not fire. Wire `drush deploy:hook` (typically via `drush deploy`) into your deploy process to use this module.
 
