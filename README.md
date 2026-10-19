@@ -12,7 +12,7 @@
 [![Build, test and deploy](https://github.com/drevops/deploy_steps/actions/workflows/test.yml/badge.svg)](https://github.com/drevops/deploy_steps/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/drevops/deploy_steps/graph/badge.svg)](https://codecov.io/gh/drevops/deploy_steps)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/drevops/deploy_steps)
-![LICENSE](https://img.shields.io/github/license/drevops/deploy_steps)
+![License: GPL-2.0-or-later](https://img.shields.io/badge/license-GPL--2.0--or--later-orange.svg)
 ![Renovate](https://img.shields.io/badge/renovate-enabled-green?logo=renovatebot)
 
 ![PHP 8.3](https://img.shields.io/badge/PHP-8.3-777BB4.svg)

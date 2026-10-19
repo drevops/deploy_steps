@@ -8,7 +8,9 @@ Deploy Steps (`deploy_steps`) is a Drupal module. The project provides a complet
 
 ## Development Commands
 
-**HARD RULE - use the provided command wrappers, never the tool binaries directly.** When `make` or `ahoy` exposes a command for a task, use that command; do not call the underlying binary directly. Each wrapper `chdir`s into `build/` and runs the tool with the config, plugins, and environment that CI uses, so a raw invocation from the repository root silently diverges from CI - it can pass locally while CI fails (or vice versa), or crash outright when a relative path resolves against the wrong directory. If no wrapped command covers what you need, extend the `make` or `ahoy` target rather than making a one-off raw call; if that is not feasible, stop and ask.
+**HARD RULE - use the provided command wrappers, never the tool binaries directly.** When `make` or `ahoy` exposes a command for a task, use that command; do not call the underlying binary directly. Each wrapper runs the tool where CI runs it, in `build/` for most tools, with the config, plugins, and environment that CI uses, so a raw invocation from the repository root silently diverges from CI - it can pass locally while CI fails (or vice versa), or crash outright when a relative path resolves against the wrong directory. If no wrapped command covers what you need, extend the `make` or `ahoy` target rather than making a one-off raw call; if that is not feasible, stop and ask.
+
+**HARD RULE - never modify `scripts/eddy-tooling`.** It comes from Eddy as-is, and a scaffold update replaces it with the release's copy. To change what a tooling command does, declare a patch for the `drevops/eddy-tooling` package in `composer.dev.json`.
 
 Run each tool through its `make` wrapper, never the binary directly:
 
@@ -33,7 +35,7 @@ Run each tool through its `ahoy` wrapper, never the binary directly:
 ### Build and Environment Management
 
 **Using Make:**
-- `make build` - Complete build (stop → assemble → start → provision)
+- `make build` - Complete build (assemble → start → provision)
 - `make assemble` - Assemble codebase with dependencies
 - `make start` - Start PHP development server
 - `make stop` - Stop development server
@@ -68,7 +70,7 @@ Run each tool through its `ahoy` wrapper, never the binary directly:
 
 ### Drupal Commands
 
-- `make drush <command>` - Run Drush commands
+- `make drush <command>` - Run Drush commands. Put `--` before the arguments when they include an option, such as `make drush -- config:get system.site --format=json`, because `make` reads an option on its command line as its own. An argument can't hold a space or name a `make` target, such as `help`, unless it's an option value joined with `=`
 - `make login` - Get one-time login link
 - `ahoy drush <command>` - Run Drush commands
 - `ahoy login` - Get one-time login link
@@ -101,6 +103,11 @@ Run each tool through its `ahoy` wrapper, never the binary directly:
 - `DRUPAL_VERSION` - Target Drupal version (e.g., `10`, `11`, `11@alpha`, `12@beta`). Defaults to `extra.eddy.drupal-version` in `composer.dev.json`
 - `WEBSERVER_HOST` - Development server host (default: localhost)
 - `WEBSERVER_PORT` - Development server port. Auto-discovered from range 8000-8099 and written to `.env` if not already set
+- `WEBSERVER_WAIT_TIMEOUT` - Seconds that `start` waits for the development server to accept connections (default: 5)
+- `DRUPAL_PROFILE` - Install profile that `provision` installs the site from (default: `standard`)
+- `XDEBUG` - Set to `1` to start the development server with XDebug step-debugging
+- `CLOUDFLARE_TUNNEL` - Set to `1` to expose the development server through a public Cloudflare quick tunnel. `start` writes the tunnel URL to `.env` as `TUNNEL_URL`
+- `LOGIN_QRCODE` - Set to `1` to also render the `login` link as a terminal QR code (needs `qrencode`)
 - `GITHUB_TOKEN` - GitHub API token to avoid rate limits
 - `DEBUG` - Set to `1` to stream the full output of the underlying commands (Composer, npm, Drush). By default this output is suppressed and shown only when a command fails
 
@@ -115,7 +122,7 @@ Run each tool through its `ahoy` wrapper, never the binary directly:
 ## Code Quality Tools
 
 - **CSpell**: Spell checking across the codebase (config at `.cspell.json`)
-- **PHPCS**: Drupal and DrupalPractice standards
+- **PHPCS**: Drupal, DrupalPractice, DrevOps and PHPCompatibility standards
 - **PHPStan**: Static analysis with Drupal extensions
 - **Rector**: Automated refactoring and deprecation fixes
 - **Twig CS Fixer**: Twig template formatting
@@ -134,7 +141,8 @@ Run each tool through its `ahoy` wrapper, never the binary directly:
 - The `build/` directory contains the assembled Drupal site
 - Extension files are symlinked from root into `build/web/modules/custom/`
 - SQLite database created in `/tmp/site_deploy_steps.sqlite`
-- All quality tools run from within `build/` directory
+- The PHP quality tools run from within the `build/` directory
+- CSpell runs from the project root
 
 ## Updating the scaffold
 

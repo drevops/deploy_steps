@@ -49,6 +49,7 @@
         "idempotently",
         "initialisation",
         "initialised",
+        "isig",
         "jangregor",
         "lando",
         "langcode",
@@ -71,7 +72,6 @@
         "phpstan",
         "phpstorm",
         "phpunit",
-        "pkill",
         "popd",
         "prompty",
         "prophesize",
@@ -130,10 +130,7 @@
         "*.min.*",
         "*.cast",
         "LICENSE.txt",
-        "LICENSE",
-        ".eddy/tests/fixtures/",
-        ".eddy/tests/vendor/",
-        ".eddy/assets/node_modules/"
+        "LICENSE"
     ],
     "useGitignore": true,
     "overrides": [
